@@ -1,0 +1,54 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# IDE and editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary / Scratch scripts
+scratch/
+*.tmp
+*.log
+
+# Large Raw Datasets (Oxford IO-VNBD 2.2+ GB CSV files)
+# Excluded from version control to adhere to Git/GitHub repository size limits
+data/*.csv
+data/**/*.csv
+!data/README.md
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
