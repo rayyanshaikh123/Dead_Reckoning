@@ -1,0 +1,77 @@
+{
+  "drive": "IO-VNBD Drive M (Driver B)",
+  "idle_baseline": 0.010516046546399593,
+  "sample_rate_hz": 10.0,
+  "scenarios": [
+    {
+      "id": "highway_tunnel",
+      "name": "Straight highway tunnel",
+      "outage_s": 30.0,
+      "samples": 3601,
+      "reference": {
+        "bias": -3.482536869247387,
+        "true_distance_m": 648.0421666666354,
+        "pred_distance_m": 660.0383226462695,
+        "along_track_drift_pct": 1.8511381815383043,
+        "exit_error_m": 14.328005213730531,
+        "exit_drift_pct": 2.2109680435503383
+      }
+    },
+    {
+      "id": "short_underpass",
+      "name": "Short underpass",
+      "outage_s": 30.0,
+      "samples": 3601,
+      "reference": {
+        "bias": 2.139420959757727,
+        "true_distance_m": 219.45186111112537,
+        "pred_distance_m": 225.63442240259292,
+        "along_track_drift_pct": 2.81727448569545,
+        "exit_error_m": 6.524056882587102,
+        "exit_drift_pct": 2.972887470424992
+      }
+    },
+    {
+      "id": "medium_tunnel",
+      "name": "Medium tunnel (stop & go)",
+      "outage_s": 60.0,
+      "samples": 3901,
+      "reference": {
+        "bias": 0.0,
+        "true_distance_m": 447.9958333333054,
+        "pred_distance_m": 491.3568086751008,
+        "along_track_drift_pct": 9.678879158131624,
+        "exit_error_m": 41.73932989501704,
+        "exit_drift_pct": 9.316901361438177
+      }
+    },
+    {
+      "id": "mountain_tunnel",
+      "name": "Long mountain tunnel",
+      "outage_s": 120.0,
+      "samples": 4501,
+      "reference": {
+        "bias": 0.03521603713818981,
+        "true_distance_m": 1679.8973055555443,
+        "pred_distance_m": 1766.2646720779594,
+        "along_track_drift_pct": 5.141228945173721,
+        "exit_error_m": 85.62800859286244,
+        "exit_drift_pct": 5.09721685424962
+      }
+    },
+    {
+      "id": "city_canyon",
+      "name": "Complex city canyon",
+      "outage_s": 90.0,
+      "samples": 4201,
+      "reference": {
+        "bias": -0.012699999999999998,
+        "true_distance_m": 599.9396111111046,
+        "pred_distance_m": 685.5419835046936,
+        "along_track_drift_pct": 14.268498163515336,
+        "exit_error_m": 83.39726027450838,
+        "exit_drift_pct": 13.90094248320333
+      }
+    }
+  ]
+}

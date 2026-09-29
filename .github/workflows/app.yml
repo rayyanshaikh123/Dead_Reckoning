@@ -1,0 +1,30 @@
+name: IDR app
+
+on:
+  push:
+    paths: ['app/**', '.github/workflows/app.yml']
+  pull_request:
+    paths: ['app/**', '.github/workflows/app.yml']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.47.1
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Formatting
+        run: dart format --output=none --set-exit-if-changed lib test
+      - name: Static analysis
+        run: flutter analyze
+      # Includes the Python-parity goldens and the IO-VNBD Drive M benchmark
+      # (assets are in the repo; no network or dataset needed).
+      - name: Tests
+        run: flutter test

@@ -1,0 +1,123 @@
+{
+  "model": "IDNN v5",
+  "source": "results/crossdrive_v5_model.pth",
+  "n_features": 18,
+  "delay_taps": 20,
+  "hidden_sizes": [
+    256,
+    128,
+    64
+  ],
+  "activation": "gelu_erf",
+  "sample_rate_hz": 10.0,
+  "window_order": "newest_first",
+  "feature_order": [
+    "lin_ax",
+    "lin_ay",
+    "lin_az",
+    "grav_x",
+    "grav_y",
+    "grav_z",
+    "gyro_x",
+    "gyro_y",
+    "gyro_z",
+    "jerk_ax",
+    "jerk_ay",
+    "jerk_az",
+    "jerk_gx",
+    "jerk_gy",
+    "jerk_gz",
+    "a_horiz_norm",
+    "pitch",
+    "e_vib_norm"
+  ],
+  "y_mean": 9.179828643798828,
+  "y_std": 6.669973850250244,
+  "tensors": [
+    {
+      "name": "x_mean",
+      "shape": [
+        378
+      ],
+      "offset": 0,
+      "count": 378
+    },
+    {
+      "name": "x_std",
+      "shape": [
+        378
+      ],
+      "offset": 378,
+      "count": 378
+    },
+    {
+      "name": "in_proj.weight",
+      "shape": [
+        256,
+        378
+      ],
+      "offset": 756,
+      "count": 96768
+    },
+    {
+      "name": "in_proj.bias",
+      "shape": [
+        256
+      ],
+      "offset": 97524,
+      "count": 256
+    },
+    {
+      "name": "block1.weight",
+      "shape": [
+        128,
+        256
+      ],
+      "offset": 97780,
+      "count": 32768
+    },
+    {
+      "name": "block1.bias",
+      "shape": [
+        128
+      ],
+      "offset": 130548,
+      "count": 128
+    },
+    {
+      "name": "block2.weight",
+      "shape": [
+        64,
+        128
+      ],
+      "offset": 130676,
+      "count": 8192
+    },
+    {
+      "name": "block2.bias",
+      "shape": [
+        64
+      ],
+      "offset": 138868,
+      "count": 64
+    },
+    {
+      "name": "head.weight",
+      "shape": [
+        1,
+        64
+      ],
+      "offset": 138932,
+      "count": 64
+    },
+    {
+      "name": "head.bias",
+      "shape": [
+        1
+      ],
+      "offset": 138996,
+      "count": 1
+    }
+  ],
+  "parameter_count": 139137
+}
