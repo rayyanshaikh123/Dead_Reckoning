@@ -19,10 +19,11 @@
 4. [Key Engineering Innovations](#-key-engineering-innovations)
 5. [Comprehensive Benchmark Scorecard](#-comprehensive-benchmark-scorecard)
 6. [Visual Gallery & Performance Graphs](#-visual-gallery--performance-graphs)
-7. [Repository File Guide & Architecture](#-repository-file-guide--architecture)
-8. [Quick Start & Reproduction Guide](#-quick-start--reproduction-guide)
-9. [Detailed Project Documentation](#-detailed-project-documentation)
-10. [Team & License](#-team--license)
+7. [The IDR App & Website](#-the-idr-app--website)
+8. [Repository File Guide & Architecture](#-repository-file-guide--architecture)
+9. [Quick Start & Reproduction Guide](#-quick-start--reproduction-guide)
+10. [Detailed Project Documentation](#-detailed-project-documentation)
+11. [Team & License](#-team--license)
 
 ---
 
@@ -190,6 +191,39 @@ All plots are generated automatically by our benchmarking scripts and saved at 3
 
 ---
 
+## 📱 The IDR App & Website
+
+The research pipeline also runs **live on a phone**. Two products are built on it:
+
+### The app (`app/`, Flutter, Android + iOS)
+IDNN v5 and every filter above (gate, EKF, cruise lock, ZUPT, GNSS calibrator) are ported to **pure Dart and run on the phone at 10 Hz**. There's no server and no internet needed for the AI. Every stage is verified against the Python pipeline, and the five benchmark tunnels are reproduced to within 0.2 m of Python.
+* **Live navigation:** keeps your position on the map when GPS drops, following OpenStreetMap roads (cached offline). At junctions it keeps up to 40 route hypotheses alive until the motion picks one.
+* **Test Simulation:** a real recorded drive with turns plays on the map. You open and close tunnels whenever you like and watch IDR navigate without GPS, measured live against the truth: speed, heading, distance, error in metres and %, and pass/fail against the SIH target.
+* **Replay, History and Tunnel test:** the five benchmark tunnels, automatic drive recording with every outage scored, and a button to hide GPS on a real drive.
+* **Handheld-safe:** detects when the phone isn't mounted and pauses calibration.
+
+On the app's **own OpenStreetMap road matching** (no ground-truth track), all five benchmark tunnels pass the SIH target:
+
+| Tunnel | Exit error, OSM roads (live app) |
+| :--- | :---: |
+| Straight Highway Tunnel (648 m) | **12.3 m (1.9%)** |
+| Short Underpass (219 m) | **4.9 m (2.2%)** |
+| Medium Tunnel (448 m) | **14.3 m (3.2%)** |
+| Long Mountain Tunnel (1,680 m) | **113.7 m (6.8%)** |
+| Complex City Canyon (600 m) | **36.2 m (6.0%)** |
+
+> **Beyond the five tunnels.** Over **145 random GPS outages** (30–120 s) across the whole 105 km Drive M, the live app method has a median exit error of **16.6%** and passes the SIH target in **31%** of outages, against 69.2% and 3% for holding the last GPS speed. The five benchmark tunnels are favourable picks. The main limit is the model's speed accuracy over short windows (15.7 km/h RMSE). See [`app/README.md`](app/README.md#accuracy-on-the-whole-drive-toolevaluatedart) for the full evaluation and next steps.
+
+Details: [`app/README.md`](app/README.md).
+
+### The website (`web/`, Next.js + three.js)
+A scroll-driven 3D showcase. A 1982 Mercedes W201 starts in the dark with only its headlights on, then drives through a moonlit mountain tunnel while IDR takes over from GPS, and finishes on a top view of the phone sensors it uses, the app screens, and an APK download. It's tuned for 60 fps on a MacBook Air. Details: [`web/README.md`](web/README.md).
+
+### Export tools (`tools/app_export/`)
+The Python bridge from research to app: exports the trained model to the app's format (`export_model.py`), creates the parity goldens (`make_goldens.py`), cuts the replay scenarios and their OSM roads (`export_replay.py`, `export_osm.py`), and packs the full-drive evaluation data (`export_eval_pack.py`). See [`tools/app_export/README.md`](tools/app_export/README.md).
+
+---
+
 ## 📁 Repository File Guide & Architecture
 
 ```
@@ -201,8 +235,12 @@ SIH-IDR Workspace/
 ├── SIH_IDR_MASTER_PROJECT_DOCUMENT.html # Standalone web document with print-to-PDF
 ├── CONTEXT_CONTINUATION.md       # Engineering state record
 ├── requirements.txt              # Environment dependencies
+├── app/                          # Flutter app (Android + iOS): on-device IDR, Simulation, Replay
+├── web/                          # Next.js 3D showcase website
+├── tools/app_export/             # Python → app bridge: model export, goldens, replays, OSM roads
 ├── data/
-│   └── raw/IO-VNBD/              # Oxford IO-VNBD dataset (sensor CSVs & ground truth)
+│   ├── raw/IO-VNBD/              # Oxford IO-VNBD dataset (sensor CSVs & ground truth)
+│   └── eval/                     # Full-drive evaluation pack & reports (git-ignored)
 ├── results/
 │   ├── crossdrive_v5_model.pth   # Trained PyTorch weights for IDNN v5 Flagship
 │   └── plots/
@@ -272,15 +310,32 @@ python -m src.plot_all_models_comparison
 ```
 * Generates the executive bar chart, summary table, and cumulative distance error plots in `results/plots/all_models_comparison/`.
 
+### 5. Run the App
+Requires Flutter (stable; built with 3.47); the Android SDK (platform 36) and JDK 17 for Android; Xcode for iOS.
+```bash
+cd app
+flutter pub get
+flutter test                  # engine parity, benchmark, simulation
+flutter run --release         # on a connected phone
+flutter build apk --release   # → build/app/outputs/flutter-apk/app-release.apk
+```
+
+### 6. Run the Website
+```bash
+cd web
+npm install
+npm run dev                   # http://localhost:3000
+```
+
 ---
 
 ## 📚 Detailed Project Documentation
 
 For deeper technical study, comprehensive derivations, and team reports, please refer to:
-* **[`TIMELINE.md`](file:///c:/Users/manas/College%20Project/SIH-IDR%20Workspace/TIMELINE.md):** The chronological engineering history from Day 1 to present, detailing every hypothesis, failure mode, and architectural milestone.
-* **[`SIH_IDR_MASTER_PROJECT_DOCUMENT.md`](file:///c:/Users/manas/College%20Project/SIH-IDR%20Workspace/SIH_IDR_MASTER_PROJECT_DOCUMENT.md):** Complete 700+ line master engineering report with embedded figures and derivations.
-* **[`SIH_IDR_MASTER_PROJECT_DOCUMENT.docx`](file:///c:/Users/manas/College%20Project/SIH-IDR%20Workspace/SIH_IDR_MASTER_PROJECT_DOCUMENT.docx):** Executive styled Microsoft Word document (5.15 MB) with cover page, zebra-striped tables, and custom typography.
-* **[`SIH_IDR_MASTER_PROJECT_DOCUMENT.html`](file:///c:/Users/manas/College%20Project/SIH-IDR%20Workspace/SIH_IDR_MASTER_PROJECT_DOCUMENT.html):** Standalone web document with `@media print` support for 1-click PDF export.
+* **[`TIMELINE.md`](TIMELINE.md):** The chronological engineering history from Day 1 to present, detailing every hypothesis, failure mode, and architectural milestone.
+* **[`SIH_IDR_MASTER_PROJECT_DOCUMENT.md`](SIH_IDR_MASTER_PROJECT_DOCUMENT.md):** Complete 700+ line master engineering report with embedded figures and derivations.
+* **[`SIH_IDR_MASTER_PROJECT_DOCUMENT.docx`](SIH_IDR_MASTER_PROJECT_DOCUMENT.docx):** Executive styled Microsoft Word document (5.15 MB) with cover page, zebra-striped tables, and custom typography.
+* **[`SIH_IDR_MASTER_PROJECT_DOCUMENT.html`](SIH_IDR_MASTER_PROJECT_DOCUMENT.html):** Standalone web document with `@media print` support for 1-click PDF export.
 
 ---
 
