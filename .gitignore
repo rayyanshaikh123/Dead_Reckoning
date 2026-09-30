@@ -12,6 +12,8 @@ build/
 develop-eggs/
 dist/
 downloads/
+# ...except the website's APK download (web/public/downloads/idr.apk)
+!web/public/downloads/
 eggs/
 .eggs/
 /lib/

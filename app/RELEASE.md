@@ -39,7 +39,20 @@ For App Store review:
 
 Without `key.properties`, release builds are signed with the debug key. That's fine for testing, but Play won't accept it.
 
-**Android hasn't been compiled yet.** There was no Android SDK on the development Mac. The first Android build should check:
+### APK for the website
+
+The site's **Download APK** button serves `web/public/downloads/idr.apk`, which is committed and deployed with the site on Vercel. The repo is private, so a GitHub release link would 404 for visitors. Use the arm64 build there: it runs on virtually every current Android phone and is about 21 MB, against about 56 MB for the universal APK.
+
+```bash
+flutter build apk --release --split-per-abi
+cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk ../web/public/downloads/idr.apk
+```
+
+Then commit and push; Vercel redeploys with the new APK.
+
+Build with the Flutter version CI uses (3.47.1, Dart 3.13). Older Flutter versions fail on the `sdk: ^3.13.1` constraint. The first build also downloads NDK 28 and Build-Tools 36, which takes a few minutes.
+
+**Android builds compile, but haven't been tested on a phone yet.** The first device test should check:
 - the sensor stream (Live → `[details]`: about 10 Hz, gravity ≈ 9.81);
 - the background notification, which appears when location is on and "Run in background" is enabled;
 - that the Android 13+ notification permission prompt appears.
