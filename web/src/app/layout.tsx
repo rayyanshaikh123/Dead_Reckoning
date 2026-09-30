@@ -8,10 +8,19 @@ const mono = Sometype_Mono({
   weight: ["400", "500", "600"],
 });
 
+const title = "IDR — keeps navigating when GPS drops";
+const description =
+  "IDR is an on-device AI that reads your phone's motion sensors to keep tracking your car through tunnels, underpasses and city canyons when GPS drops.";
+
+// The logo files next to this layout (favicon.ico, icon.png, apple-icon.png,
+// opengraph-image.png, twitter-image.png) are picked up by Next.js on their
+// own; they're generated from app/assets/icon/icon-1024.png.
 export const metadata: Metadata = {
-  title: "IDR — keeps navigating when GPS drops",
-  description:
-    "IDR is an on-device AI that reads your phone's motion sensors to keep tracking your car through tunnels, underpasses and city canyons when GPS drops.",
+  title,
+  description,
+  applicationName: "IDR",
+  openGraph: { type: "website", siteName: "IDR", title, description },
+  twitter: { card: "summary_large_image", title, description },
 };
 
 export const viewport: Viewport = {
