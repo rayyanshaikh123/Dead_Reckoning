@@ -16,20 +16,6 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_CAR_MODEL: hasCarModel ? CAR_MODEL : "",
   },
-  // Serve the APK(s) in public/downloads/ as an Android package download, so
-  // phones offer to install it instead of opening it as an unknown file.
-  headers() {
-    return [
-      {
-        source: "/downloads/:path*",
-        headers: [
-          { key: "Content-Type", value: "application/vnd.android.package-archive" },
-          { key: "Content-Disposition", value: "attachment" },
-          { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
-        ],
-      },
-    ];
-  },
 };
 
 export default nextConfig;

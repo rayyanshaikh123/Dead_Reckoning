@@ -34,16 +34,13 @@ The part names it looks for are specific to that model. For another car, adjust 
 
 ## Download button
 
-The **Download APK** buttons link to `public/downloads/idr.apk`, which is committed and deployed with the site. The repo is private, so a GitHub release link would 404 for visitors. The root `.gitignore` ignores `downloads/` folders but makes an exception for this one.
+The **Download APK** buttons link to `idr.apk` on the repo's latest GitHub release:
 
-To ship a new build, use the arm64 APK (about 21 MB; the universal APK is about 56 MB), then commit and push:
-
-```bash
-cd app && flutter build apk --release --split-per-abi
-cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk ../web/public/downloads/idr.apk
+```
+https://github.com/rayyanshaikh123/Dead_Reckoning/releases/latest/download/idr.apk
 ```
 
-`next.config.ts` sends everything under `/downloads/` as `application/vnd.android.package-archive` with `Content-Disposition: attachment`, so Android phones offer to install it.
+GitHub serves it as `application/vnd.android.package-archive` with `Content-Disposition: attachment`, so Android phones offer to install it. The APK isn't committed or deployed with the site. To ship a new build, publish a new release with the APK attached as `idr.apk`; the site picks it up without a redeploy. See [`app/RELEASE.md`](../app/RELEASE.md#apk-for-the-website).
 
 To link elsewhere instead, set `NEXT_PUBLIC_APK_URL` at build time:
 
@@ -57,7 +54,7 @@ The site is fully static (every route is prerendered), so it needs no server set
 
 1. In Vercel, **Add New → Project** and import this GitHub repo.
 2. Set **Root Directory** to `web`. The Next.js app lives here, not at the repo root. Vercel detects Next.js and uses `npm install` / `next build` on its own.
-3. Optional: set `NEXT_PUBLIC_APK_URL` under **Environment Variables** to override the download link. Without it, the buttons serve `public/downloads/idr.apk`.
+3. Optional: set `NEXT_PUBLIC_APK_URL` under **Environment Variables** to override the download link. Without it, the buttons link to the latest GitHub release.
 4. Deploy.
 
 Don't set `NEXT_DIST_DIR` on Vercel. Vercel expects the build in `.next`.

@@ -41,14 +41,14 @@ Without `key.properties`, release builds are signed with the debug key. That's f
 
 ### APK for the website
 
-The site's **Download APK** button serves `web/public/downloads/idr.apk`, which is committed and deployed with the site on Vercel. The repo is private, so a GitHub release link would 404 for visitors. Use the arm64 build there: it runs on virtually every current Android phone and is about 21 MB, against about 56 MB for the universal APK.
+The site's **Download APK** button links to `idr.apk` on the repo's latest GitHub release (`…/releases/latest/download/idr.apk`), so the asset must keep that exact name. Use the arm64 build: it runs on virtually every current Android phone and is about 21 MB, against about 56 MB for the universal APK.
 
 ```bash
 flutter build apk --release --split-per-abi
-cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk ../web/public/downloads/idr.apk
+cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk idr.apk
 ```
 
-Then commit and push; Vercel redeploys with the new APK.
+Then on GitHub, **Releases → Draft a new release**, create a new tag, attach `idr.apk` and publish it (not as a draft or pre-release, which "latest" skips). To replace the APK on an existing release instead, delete the old `idr.apk` asset and upload the new one. The site needs no redeploy either way.
 
 Build with the Flutter version CI uses (3.47.1, Dart 3.13). Older Flutter versions fail on the `sdk: ^3.13.1` constraint. The first build also downloads NDK 28 and Build-Tools 36, which takes a few minutes.
 
