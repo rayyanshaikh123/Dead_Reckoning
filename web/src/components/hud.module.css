@@ -1,0 +1,152 @@
+.hud {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 16px 28px;
+  border-radius: 22px;
+  /* solid-ish, not backdrop-filter: blurring the live canvas costs every frame */
+  background: rgba(18, 19, 19, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 150px;
+}
+.center {
+  align-items: center;
+  min-width: 120px;
+}
+.end {
+  align-items: flex-end;
+}
+.divider {
+  width: 1px;
+  align-self: stretch;
+  background: var(--outline);
+}
+
+.label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.state {
+  font-size: 13px;
+}
+.value {
+  font-size: 15px;
+}
+.state,
+.value,
+.source,
+.label {
+  white-space: nowrap;
+}
+
+.dots {
+  display: flex;
+  gap: 5px;
+}
+.dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--text-3);
+  transition: background 0.3s, border-color 0.3s;
+}
+.dots[data-on="true"] i {
+  background: var(--positive);
+  border-color: var(--positive);
+}
+
+.speedRow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.speed {
+  font-size: 40px;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+.unit {
+  font-size: 12px;
+  color: var(--text-2);
+}
+.source {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* In the tunnel: IDR is driving. */
+.hud[data-phase="sensors"] {
+  border-color: rgba(240, 97, 49, 0.35);
+}
+.hud[data-phase="sensors"] .state,
+.hud[data-phase="sensors"] .source,
+.hud[data-phase="sensors"] .value {
+  color: var(--accent);
+}
+.hud[data-phase="back"] .state,
+.hud[data-phase="back"] .value {
+  color: var(--positive);
+}
+
+@media (max-width: 800px) {
+  .hud {
+    left: 12px;
+    right: 12px;
+    bottom: 14px;
+    transform: none;
+    gap: 12px;
+    padding: 12px 14px;
+    justify-content: space-between;
+    border-radius: 18px;
+  }
+  .cell,
+  .center {
+    min-width: 0;
+  }
+  .speed {
+    font-size: 30px;
+  }
+  .value,
+  .state {
+    font-size: 11.5px;
+  }
+  .row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .label,
+  .source {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+  }
+  .dots i {
+    width: 6px;
+    height: 6px;
+  }
+}

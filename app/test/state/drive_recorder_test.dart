@@ -36,7 +36,7 @@ void main() {
   Future<
     ({
       ProviderContainer c,
-      Future<void> Function(double seconds, double speed) drive,
+      Future<void> Function(double seconds, double speed, {bool inHand}) drive,
       Directory dir,
     })
   >
@@ -69,7 +69,11 @@ void main() {
 
     final rnd = math.Random(2);
     var t = 0.0, lat = 52.4;
-    Future<void> drive(double seconds, double speed) async {
+    Future<void> drive(
+      double seconds,
+      double speed, {
+      bool inHand = false,
+    }) async {
       final end = t + seconds;
       while (t < end) {
         lat += speed * 0.1 / 111320;
@@ -84,15 +88,18 @@ void main() {
           ),
         );
         for (var k = 0; k < 5; k++) {
+          // In a hand the phone keeps tilting by ~10°; in a mount it doesn't.
+          final tilt = inHand ? 0.18 * math.sin(t * 1.3) : 0.0;
+          final gy = 9.81 * math.cos(tilt), gz = 9.81 * math.sin(tilt);
           motion.add(
             SensorFrame(
               t: t,
               ax: rnd.nextDouble() - 0.5,
-              ay: 9.81,
-              az: rnd.nextDouble() - 0.5,
+              ay: gy,
+              az: gz + rnd.nextDouble() - 0.5,
               gravX: 0,
-              gravY: 9.81,
-              gravZ: 0,
+              gravY: gy,
+              gravZ: gz,
               gyroX: 0,
               gyroY: 0,
               gyroZ: 0,
@@ -129,6 +136,7 @@ void main() {
     expect(d.outages, hasLength(1));
     expect(d.outages.single.simulated, isTrue);
     expect(d.outages.single.seconds, closeTo(4, 0.6));
+    expect(d.outages.single.handheld, isFalse);
     expect(d.track, isNotEmpty);
 
     final csv = File('${s.dir.path}/${d.id}.csv');
@@ -136,7 +144,8 @@ void main() {
     final lines = csv.readAsLinesSync();
     expect(lines.first, startsWith('TIME SINCE START (ms),GPS LATITUDE'));
     expect(lines.length, greaterThan(200));
-    expect(lines.where((l) => l.endsWith(',test')), isNotEmpty);
+    expect(lines.first, endsWith(',IDR MODE,MOUNTED'));
+    expect(lines.where((l) => l.endsWith(',test,1')), isNotEmpty);
   });
 
   test('a very short recording is discarded', () async {
@@ -145,5 +154,18 @@ void main() {
     expect(s.c.read(driveRecorderProvider).recording, isTrue);
     await s.c.read(driveRecorderProvider.notifier).finish();
     expect(await s.c.read(drivesProvider.future), isEmpty);
+  });
+
+  test('an outage with the phone in hand is recorded as such', () async {
+    final s = await setUpDrive();
+    await s.drive(10, 15);
+    expect(s.c.read(driveRecorderProvider).recording, isTrue);
+    s.c.read(tunnelTestProvider.notifier).toggle();
+    await s.drive(8, 15, inHand: true);
+    s.c.read(tunnelTestProvider.notifier).toggle();
+    await s.drive(20, 15);
+    await s.c.read(driveRecorderProvider.notifier).finish();
+    final d = (await s.c.read(drivesProvider.future)).single;
+    expect(d.outages.single.handheld, isTrue);
   });
 }

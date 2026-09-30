@@ -1,0 +1,215 @@
+/* Pinned while scrolling turns the carousel (height = how long it's pinned). */
+.section {
+  position: relative;
+  height: 420vh;
+  background: var(--bg-deep);
+}
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 96px 0 34px;
+}
+.glow {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  width: min(900px, 120vw);
+  height: min(900px, 120vw);
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgba(240, 97, 49, 0.16), rgba(240, 97, 49, 0.04) 55%, transparent);
+  pointer-events: none;
+}
+
+.head {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+.kicker {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.title {
+  font-size: clamp(28px, 3.6vw, 50px);
+  line-height: 1.04;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  max-width: 560px;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 22px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #121212;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 10px 40px rgba(240, 97, 49, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 50px rgba(240, 97, 49, 0.4);
+}
+
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  perspective: 1400px;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  outline: none;
+}
+.stage:active {
+  cursor: grabbing;
+}
+
+.slide {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(250px, calc((100svh - 330px) * 0.46), 56vw);
+  margin: 0;
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+  transition: filter 0.35s ease;
+}
+/* Screens behind the active one: blurred in fixed steps (set by the script). */
+.slide[data-blur="1"] {
+  filter: blur(3px) brightness(0.7);
+}
+.slide[data-blur="2"] {
+  filter: blur(7px) brightness(0.45);
+}
+
+/* Phone frame around each screenshot. */
+.phone {
+  position: relative;
+  padding: 9px;
+  border-radius: 40px;
+  background: linear-gradient(145deg, #3a3b3b, #111212 40%, #2a2b2b);
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+.phone::before {
+  /* dynamic island */
+  content: "";
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  width: 30%;
+  height: 20px;
+  transform: translateX(-50%);
+  border-radius: 12px;
+  background: #050505;
+  z-index: 1;
+}
+.screen {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 31px;
+  pointer-events: none;
+}
+
+.foot {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+.caption {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 16px;
+  row-gap: 4px;
+  align-items: baseline;
+}
+.count {
+  grid-row: span 2;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+.of {
+  color: var(--text-3);
+}
+.captionTitle {
+  font-size: 18px;
+}
+.captionText {
+  font-size: 13px;
+  color: var(--text-2);
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 14px;
+  color: var(--text-2);
+}
+.dots {
+  display: flex;
+  gap: 6px;
+  margin-right: 8px;
+}
+.dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--surface-high);
+  transition: background 0.3s, width 0.3s;
+}
+.dots .dotOn {
+  width: 22px;
+  border-radius: 3px;
+  background: var(--accent);
+}
+
+@media (max-width: 700px) {
+  .sticky {
+    padding: 84px 0 22px;
+  }
+  .head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .cta {
+    display: none;
+  }
+  .foot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .dots {
+    display: none;
+  }
+}

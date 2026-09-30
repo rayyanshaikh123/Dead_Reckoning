@@ -52,3 +52,6 @@ data/**/*.csv
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Full-drive evaluation packs and road caches (tools/app_export/export_eval_pack.py)
+data/eval/

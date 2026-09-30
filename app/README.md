@@ -59,6 +59,25 @@ Replay results on IO-VNBD Drive M (`test/engine/benchmark_test.dart`):
   - `<id>.csv` (optional): the raw 10 Hz sensor log, with IO-VNBD-style column names so it can feed retraining. Gyro columns are the physical X/Y/Z. The IDR speed columns lag the sensors by 0.5 s.
 - **Gyro-mapping check.** A shadow engine runs the alternative gyro mapping (`GyroMapping.yawIsY`). Both are scored against GPS speed while driving, per drive (drive report) and cumulatively (Settings → AI model details). Whichever is consistently lower should become the default.
 
+## Accuracy on the whole drive (`tool/evaluate.dart`)
+
+The five README tunnels turn out to be favourable picks. Across **145 random GPS outages** on the full 105 km Drive M (30–120 s each; `dart run tool/evaluate.dart`, report in `data/eval/`):
+
+| Method | Median exit error | SIH pass rate (< 10 %) |
+|---|---|---|
+| IDR on OSM roads (live app) | 167 m (25 %) | 17 % |
+| IDR on the true route (README method) | 79 m (15 %) | 35 % |
+| IDR heading only | 174 m (29 %) | 10 % |
+| Hold last GPS speed (no IDR) | 362 m (69 %) | 3 % |
+
+`--fixed` (the five README tunnels inside the same run) reproduces the benchmark: 100 % pass on OSM, 80 % on the true route. So the evaluator is sound and the gap is real.
+
+- **IDR is about 3× better than doing nothing, but misses the SIH target on most random outages.**
+- **Main limit: model speed accuracy.** Speed error is 15.7 km/h RMSE (Python gives the same). Over 105 km the errors cancel (total distance +0.3 %), but over a 30–120 s outage they don't: the median distance drift is 16 %.
+  - Retraining is the lever. Use the logger's "Pitch" (true yaw rate), which training never saw. Fix the ~1.3 s phone/vehicle offset. Add more drives, e.g. the app's own sensor logs.
+- **Second limit: junction choices on OSM.** OSM is worse than the true route (25 % vs 15 %). The worst outages come from following the wrong branch.
+  - A multi-hypothesis road matcher would help.
+
 ## Status
 
 All planned phases (0–7) are done:

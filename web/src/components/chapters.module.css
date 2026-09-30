@@ -1,0 +1,286 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.chapter {
+  position: absolute;
+  left: var(--gutter);
+  top: 50%;
+  margin-top: -170px;
+  width: min(470px, calc(100vw - 2 * var(--gutter)));
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform, opacity;
+}
+/* soft dark pool behind the text, so it reads over the scene */
+.chapter::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -140px -220px -140px calc(-1 * var(--gutter) - 200px);
+  background: radial-gradient(closest-side, rgba(10, 11, 11, 0.78), rgba(10, 11, 11, 0));
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 22px;
+}
+.index {
+  white-space: nowrap;
+  color: var(--text);
+  letter-spacing: 0.06em;
+}
+.of {
+  color: var(--text-3);
+}
+.rule {
+  width: 36px;
+  height: 1px;
+  background: var(--accent);
+  opacity: 0.6;
+}
+
+.title {
+  font-size: clamp(30px, 3.6vw, 52px);
+  line-height: 1.04;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.body {
+  margin-top: 20px;
+  max-width: 420px;
+  font-size: clamp(14px, 1.15vw, 16px);
+  line-height: 1.65;
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+/* ---- details ---- */
+.stats {
+  display: flex;
+  gap: 34px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--outline);
+}
+.stats > div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 6px;
+}
+.stats dd {
+  font-size: clamp(22px, 2vw, 28px);
+  letter-spacing: -0.02em;
+}
+.stats dt {
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.pipeline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  margin-top: 30px;
+  list-style: none;
+  padding: 0;
+}
+.pipeline li {
+  position: relative;
+  padding: 8px 14px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  border: 1px solid var(--outline);
+  border-radius: 999px;
+  background: rgba(30, 31, 31, 0.7);
+}
+.pipeline li + li {
+  margin-left: 22px;
+}
+.pipeline li + li::before {
+  /* connector */
+  content: "";
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  width: 22px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--outline), var(--accent));
+}
+.pipeLast {
+  color: #111 !important;
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+
+.gps {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 30px;
+  padding: 12px 18px;
+  width: fit-content;
+  border: 1px solid var(--outline);
+  border-radius: 14px;
+  background: rgba(30, 31, 31, 0.7);
+  font-size: 12px;
+}
+.gpsLabel {
+  letter-spacing: 0.14em;
+  color: var(--text-3);
+}
+.gpsState {
+  color: var(--accent);
+}
+.dots {
+  display: flex;
+  gap: 5px;
+}
+.dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--text-3);
+}
+.dots[data-on="true"] i {
+  border-color: var(--positive);
+  background: var(--positive);
+}
+
+.bars {
+  display: grid;
+  gap: 14px;
+  margin-top: 30px;
+  max-width: 420px;
+}
+.bar {
+  display: grid;
+  grid-template-columns: 92px 1fr 64px;
+  align-items: center;
+  gap: 14px;
+  font-size: 12px;
+}
+.barLabel {
+  color: var(--text-2);
+}
+.barTrack {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface-high);
+  overflow: hidden;
+}
+.barFill,
+.barFillAccent {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--text-3);
+}
+.barFillAccent {
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+}
+.barValue {
+  text-align: right;
+}
+
+/* ---- chapter rail ---- */
+.rail {
+  position: absolute;
+  z-index: 4;
+  right: var(--gutter);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.railItem {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  height: 10px;
+}
+.railLabel {
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text);
+  opacity: 0;
+  transform: translateX(6px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  white-space: nowrap;
+}
+.railTick {
+  width: 12px;
+  height: 1px;
+  background: var(--text-3);
+  transition: width 0.35s ease, background 0.35s ease;
+}
+.railItem[data-active] .railTick {
+  width: 32px;
+  background: var(--accent);
+}
+.railItem[data-active] .railLabel {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 800px) {
+  .chapter {
+    top: 72px;
+    margin-top: 0;
+    left: 16px;
+    width: calc(100vw - 32px);
+  }
+  .chapter::before {
+    inset: -90px -40px -60px -40px;
+  }
+  .kicker {
+    margin-bottom: 12px;
+  }
+  .body {
+    margin-top: 12px;
+  }
+  .stats,
+  .pipeline,
+  .gps,
+  .bars {
+    margin-top: 16px;
+  }
+  .stats {
+    gap: 22px;
+    padding-top: 14px;
+  }
+  .pipeline li {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+  .pipeline li + li {
+    margin-left: 14px;
+  }
+  .pipeline li + li::before {
+    width: 14px;
+  }
+  .rail {
+    display: none;
+  }
+}

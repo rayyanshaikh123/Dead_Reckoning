@@ -36,3 +36,35 @@ Re-run the scripts whenever the model is retrained.
 `data/raw/IO-VNBD/Synchronised V abd S datasets/Categorised IOVNB Dataset/M (Driver B)/{S-M,V-M}.csv`
 
 **Sensor axes.** The column mapping the model was trained with has a quirk: the gyro inputs are `[Yaw, Yaw, Roll]`. See [CANONICAL_FRAME.md](CANONICAL_FRAME.md).
+
+## Full-drive evaluation
+
+The five fixed tunnels in the CI benchmark are a small sample. For an honest accuracy number, run the app's engine over the **whole** 105 km Drive M, with GPS cut at many random places:
+
+```bash
+# once: pack the drive and download OSM roads along its route (-> data/eval/, git-ignored)
+tools/app_export/.venv/bin/python tools/app_export/export_eval_pack.py
+
+# run (from app/): 3 IDR modes x N passes, in parallel
+cd app && dart run tool/evaluate.dart --passes 4 --seed 1
+```
+
+**Outages:**
+- random start points; lengths of 30, 60, 90 or 120 s; at least 100 m driven;
+- at least 90 s of GPS between outages;
+- identical across methods for a given seed, so the comparison is paired.
+
+**Methods compared:**
+- `osm`: IDR following OpenStreetMap roads (the live app);
+- `truth`: IDR snapped to the true route (the README protocol);
+- `none`: IDR with heading only;
+- `hold`: keep the last GPS speed and heading, i.e. no dead reckoning.
+
+**Report** (`data/eval/report_<drive>_<time>.md` and `.json`):
+- median, 90th-percentile and worst exit error;
+- SIH pass rate (< 10 %), overall and per outage length;
+- the worst outages, to inspect;
+- whole-drive speed RMSE;
+- a Dart-vs-Python parity check over all 105 km.
+
+Other IO-VNBD drives can be packed with `--drive S-<name>.csv --name drive_<name>` and evaluated with `--pack ../data/eval/drive_<name>.idreval`. Only Drive M is guaranteed unseen in training; others may inflate results.
