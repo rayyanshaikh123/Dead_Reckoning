@@ -1,0 +1,23 @@
+{
+  "name": "idr-video",
+  "private": true,
+  "version": "1.0.0",
+  "description": "IDR product story video, built with Remotion",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render IDRStory out/idr-story.mp4"
+  },
+  "dependencies": {
+    "@fontsource/sometype-mono": "^5.2.5",
+    "@remotion/cli": "4.0.532",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.532",
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "@types/three": "^0.186.0",
+    "typescript": "^5.6.0"
+  }
+}
